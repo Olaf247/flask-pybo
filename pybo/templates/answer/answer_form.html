@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h5 class="my-3 border-bottom">답변 수정</h5>
+    <form method="post">
+        {{form.csrf_token}}
+        {% include "form_errors.html" %}
+
+        <div class="mb-3">
+            <label for="contents">답변내용</label>
+            <textarea class="form-control" name="contents" id="contents" rows="5">{{form.contents.data or '' }}</textarea>
+            <!--{{ simplemde.load }}-->
+        </div>
+
+        <input type="submit" class="btn btn-primary" value="저장">
+
+    </form>
+</div>
+
+{% endblock%}

@@ -1,0 +1,113 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>question_list</title>-->
+<!--    <link rel="stylesheet" href="{{url_for('static', filename='bootstrap.min.css')}}">-->
+
+<!--</head>-->
+<!--<body>-->
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container my-3">
+        <table class="table">
+            <thead>
+                <tr class="text-center table-dark">
+                    <th>번호</th>
+                    <th style="width:50%">제목</th>
+                    <th>글쓴이</th>
+                    <th>작성일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--질문 목록-->
+                {% if question_list %}
+<!--                        question_list.total : {{question_list.total}}<br>-->
+<!--                        question_list.page : {{question_list.page}}<br>-->
+<!--                        question_list.per_page : {{question_list.per_page}}<br>-->
+                        {% for question in question_list.items %}
+                        <tr>
+                            <!--글번호-->
+                            <!--<td class="text-start/center/end">-->
+                            <td class="text-center">{{question_list.total - ((question_list.page -1) * question_list.per_page) - loop.index0}}</td>
+                            <td class="text-start"><a href="{{url_for('question.detail', question_id = question.id)}}"> {{question.subject}}</a>
+                            <!--답변 갯수-->
+                                {% if question.answer_set | length > 0 %}
+                                <span class="text-danger small">{{question.answer_set | length}}</span>
+
+                                {% endif %}
+                            </td>
+                            <td class="text-center">{{question.user.username}}</td><!--글쓴이-->
+                            <td class="text-center">{{question.create_date | datetime}}</td>
+                        </tr>
+                            <!--"/detail/{{question.id}}"-->
+                            <!--<li></li>-->
+                        {% endfor %}
+                {% else %}
+                        <tr>
+                            <td colspan="99">질문 없음</td>
+                        </tr>
+                        <!--<p>질문이 없음</p>-->
+                {% endif %}
+            </tbody>
+        </table>
+
+        <!--paging-->
+<!--        question_list.has_prev:{{question_list.has_prev}}<br/>-->
+<!--        question_list.has_next:{{question_list.has_next}}<br/>-->
+<!--        question_list.iter_pages():{{question_list.iter_pages()}}<br/>-->
+        <ul class="pagination justify-content-center">
+            <!--이전-->
+            {% if question_list.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{question_list.prev_num}}">이전</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" aria-disabled="true" href="javascript:void(0);">이전</a>
+                </li>
+            {% endif %}
+            <!--//이전-->
+
+            <!--페이지번호-->
+            {% for page_num in question_list.iter_pages() %}
+                {% if page_num %}
+                    <!--현재 page인 경우, 그렇지 않은 경우 -->
+                    {% if page_num != question_list.page %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{page_num}}">{{page_num}}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item active" aria-current="page">
+                            <a class="page-link" href="javascript:void(0);">{{page_num}}</a>
+                        </li>
+                    {% endif %}
+                {% else %}
+                    <li class="disabled">
+                        <a class="page-link" href="javascript:void(0);">...</a>
+                    </li>
+                {% endif %}
+<!--                {{page_num}}-->
+            {% endfor %}
+            <!--//페이지번호-->
+
+            <!--다음페이지-->
+            {% if question_list.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{question_list.next_num}}">다음</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" aria-disabled="true" href="javascript:void(0);">다음</a>
+                </li>
+            {% endif %}
+            <!--//다음페이지-->
+        </ul>
+        <!--//paging-->
+
+        <a href="{{url_for('question.create')}}" class="btn btn-primary">질문 등록</a>
+<!--ul-->
+    </div>
+{% endblock %}
+<!--</body>-->
+<!--</html>-->
